@@ -1,5 +1,6 @@
 #include "menualuALU.h"
 #include "ui_menualuALU.h"
+#include "numero.h"
 
 menuALU::menuALU(QWidget *parent)
     : QMainWindow(parent)
@@ -21,6 +22,10 @@ menuALU::~menuALU()
 
 void menuALU::on_suma_clicked()
 {
+
+    float valor=ui->textoRealOp1->text().toFloat();
+
+    Numero numero(valor);
 
 }
 

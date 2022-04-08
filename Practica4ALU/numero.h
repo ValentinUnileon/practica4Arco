@@ -6,15 +6,22 @@
 class Numero
 {
 public:
+
     Numero(float numero);
 
 
 
-    struct{
-        unsigned int partFrac : 23;
-        unsigned int expo : 8;
-        unsigned int sign : 1;
-    }bitfield;
+    union Code {
+
+        struct{
+            unsigned int partFrac : 23;
+            unsigned int expo : 8;
+            unsigned int sign : 1;
+        }bitfield;
+
+        float numero;
+        unsigned int numerox;
+    };
 
     float numero;
     unsigned int numerox;

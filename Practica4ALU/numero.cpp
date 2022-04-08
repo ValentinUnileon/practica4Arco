@@ -8,7 +8,7 @@ Numero::Numero(float numero)
         this->numero=numero;
 }
 
-void floattoIEE (){
+void Numero::floattoIEE (){
 
     union Code a;
     printf ("Introduce un número: ");
