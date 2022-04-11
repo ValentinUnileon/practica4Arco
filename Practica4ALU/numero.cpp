@@ -6,16 +6,35 @@ using namespace std;
 Numero::Numero(float numero)
 {
         this->numero=numero;
+        floattoIEE();
+
 }
 
 void Numero::floattoIEE (){
 
     union Code a;
-    printf ("Introduce un número: ");
-    scanf ("%f", &a.numero);
 
-    printf("Signo: %u \n",a.bitfield.sign);
-    printf("Exponente: %u \n",a.bitfield.expo);
-    printf("Parte Fraccionaria : %u \n", a.bitfield.partFrac);
+    a.numero=this->numero;
+    this->signo=a.bitfield.sign;
+    this->exponente=a.bitfield.expo;
+    this->pFraccionaria=a.bitfield.partFrac;
 
+}
+
+int Numero::getExponente(){
+
+    return exponente;
+}
+
+int Numero::getSigno(){
+    return signo;
+}
+
+int Numero::getpFraccionaria(){
+    return pFraccionaria;
+}
+
+//Arreglar
+vector<int> Numero::getMantisa(){
+    return NULL;
 }

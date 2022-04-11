@@ -2,6 +2,9 @@
 #define NUMERO_H
 #include <bitset>
 
+#include <vector>
+
+using namespace std;
 
 class Numero
 {
@@ -31,9 +34,17 @@ public:
     void IEEtofloat ();
     void IEEtofloat2 ();
 
+    int exponente;
+    int pFraccionaria;
+    int signo;
+
+    int exponenteBin;
 
 
-
+    int getExponente();
+    int getpFraccionaria();
+    int getSigno();
+    vector<int> getMantisa();
 
 };
 
