@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+using namespace std;
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class menuALU; }
 QT_END_NAMESPACE
@@ -17,6 +19,7 @@ public:
 
 private slots:
     void on_suma_clicked();
+    vector<int> enteroTObinario(int numero, int numByte);
 
 private:
     Ui::menuALU *ui;
