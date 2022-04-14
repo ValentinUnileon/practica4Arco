@@ -312,22 +312,40 @@ void menuALU::on_suma_clicked()
 
 vector<int> menuALU::enteroTObinario(int numero, int numByte) {          //metodo para pasar un numero entero a binario
 
-    int decimal=numero;
+
     vector<int> binario;
 
-    for(int i=0; i<numByte; i++){
+    if (numero > 0) {
+        while (numero > 0) {
+            if (numero%2 == 0) {
 
-        if(decimal < 2){
-            binario[i] = decimal % 2;
-            decimal /= 2;
+                binario.insert(binario.begin(), 0);
+            } else {
+                binario.insert(binario.begin(), 1);
+            }
+            numero = (int) numero/2;
+        }
+    }
+
+    if(numByte==8 && (int)binario.size()<(int)numByte){
+
+        while((int)binario.size()<(int)numByte){
+           binario.insert(binario.begin(), 0);
         }
 
 
     }
 
-    if(binario.size()==22){
-        binario.insert(binario.begin()+1, 0);
+    if(numByte==23 && (int)binario.size()<(int)numByte){
+
+        while((int)binario.size()<(int)numByte){
+           binario.insert(binario.begin(), 0);
+        }
+
+
     }
+
+
 
     return binario;
 }
@@ -341,4 +359,46 @@ vector<int> menuALU::enteroTObinario(int numero, int numByte) {          //metod
 
 
 
+
+
+void menuALU::on_multiplicacion_clicked()
+{
+    float valor1=ui->textoRealOp1->text().toFloat();
+    float valor2=ui->textoRealOp2->text().toFloat();
+
+
+    Numero numero1(valor1);
+    Numero numero2(valor2);
+
+
+   int s1=numero1.getSigno();
+   int s2=numero2.getSigno();
+   int exp1=numero1.getExponente();
+   int exp2=numero2.getExponente();
+
+   //Paso1
+
+   int signoProducto=s1*s2;
+
+   //Paso2
+   int expProducto=exp1+exp2;
+
+   //Paso3
+
+   int mantisaP;
+
+    //AlgoritmoProductoEnterosSinSIgno
+
+   //*Paso1
+
+
+   vector<int> A;   //signo
+
+
+
+
+
+
+
+}
 

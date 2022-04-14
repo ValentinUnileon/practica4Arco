@@ -21,6 +21,8 @@ private slots:
     void on_suma_clicked();
     vector<int> enteroTObinario(int numero, int numByte);
 
+    void on_multiplicacion_clicked();
+
 private:
     Ui::menuALU *ui;
 };
