@@ -23,6 +23,8 @@ private slots:
 
     void on_multiplicacion_clicked();
 
+    void on_division_clicked();
+
 private:
     Ui::menuALU *ui;
 };

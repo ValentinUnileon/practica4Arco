@@ -46,6 +46,8 @@ public:
     int getSigno();
     vector<int> getMantisa();
 
+    vector<int> enteroTObinario(int numero, int numByte);
+
 };
 
 #endif // NUMERO_H

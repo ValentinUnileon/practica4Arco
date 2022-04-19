@@ -402,3 +402,17 @@ void menuALU::on_multiplicacion_clicked()
 
 }
 
+
+void menuALU::on_division_clicked()
+{
+    Numero numero(5);
+    vector<int> vector = enteroTObinario(numero.getExponente(), 8);
+    QString cadena = "";
+    for (int i = 0; i < 8; i++) {
+
+        cadena.append(QString::number(vector[i]));
+    }
+
+    this->ui->division->setText(cadena);
+}
+
