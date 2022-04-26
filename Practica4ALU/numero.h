@@ -44,9 +44,9 @@ public:
     int getExponente();
     int getpFraccionaria();
     int getSigno();
+    vector<int> enteroToBinario(int numero, int numByte);
     vector<int> getMantisa();
 
-    vector<int> enteroTObinario(int numero, int numByte);
 
 };
 

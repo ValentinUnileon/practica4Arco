@@ -44,8 +44,8 @@ void menuALU::on_suma_clicked()
     int acarreo2=0;
     int signoSuma;
 
-    vector<int> mantisa1;
-    vector<int> mantisa2;
+    vector<int> mantisa1=numero1.getMantisa();
+    vector<int> mantisa2=numero2.getMantisa();
     vector<int> mantisaSuma;
 
     vector<int> P;
@@ -73,7 +73,36 @@ void menuALU::on_suma_clicked()
     //Paso 4
 
     if(numero1.getSigno() != numero2.getSigno()){
-        mantisa2= numero2.getMantisa();
+
+        for(int i=0; i<24; i++){
+            if(mantisa2[i]==0){
+                mantisa2[i]=1;
+            }else{
+                mantisa2[i]=0;
+            }
+        }
+
+        vector<int> ceros={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1};
+        int acarreo=0;
+
+
+        for(int j= 23; j>=0; j--){
+
+           if(mantisa2[j]+ceros[j]+acarreo==3){
+                 P[j]=1;
+                 acarreo=1;
+           }else if(mantisa2[j]+ceros[j]+acarreo==2){
+                 P[j]=0;
+                 acarreo=1;
+           }else if(mantisa2[j]+ceros[j]+acarreo==1){
+                 mantisa2[j]=1;
+                 acarreo=0;
+           }else{
+                 mantisa2[j]=0;
+                 acarreo=0;
+           }
+       }
+
     }
 
     //Paso 5
@@ -305,8 +334,13 @@ void menuALU::on_suma_clicked()
     resultado.insert(resultado.end(), mantisaSuma.begin(), mantisaSuma.end());
 
 
+    QString hola;
+    for(int i=0; i<(int)resultado.size(); i++){
 
+        hola.append(QString::number(resultado[i]));
+    }
 
+    ui->resultadoReal->setText(hola);
 
 }
 
@@ -385,14 +419,142 @@ void menuALU::on_multiplicacion_clicked()
 
    //Paso3
 
-   int mantisaP;
+   //Paso 3.1
 
     //AlgoritmoProductoEnterosSinSIgno
+
+   vector<int> mantisaP;
 
    //*Paso1
 
 
-   vector<int> A;   //signo
+   vector<int> m1=numero1.getMantisa();
+   vector<int> m2=numero2.getMantisa();
+   vector<int> P;
+   int acarreo;
+
+   for(int i=0; i<24; i++){
+       P.push_back(0);
+   }
+
+
+   for(int i=0; i<24; i++){
+
+       if(m1[23]==1){
+
+           for(int j= 23; j>=0; j--){
+
+               if(P[j]+m2[j]+acarreo==3){
+                   P[j]=1;
+                   acarreo=1;
+                }else if(P[j]+m2[j]+acarreo==2){
+                   P[j]=0;
+                   acarreo=1;
+                }else if(P[j]+m2[j]+acarreo==1){
+                   P[j]=1;
+                   acarreo=0;
+                }else{
+                   P[j]=0;
+                   acarreo=0;
+                   }
+            }
+       }
+
+
+       int auxP=P[23];
+
+       for(int j=m1.size()-1; j>0; j--){
+           m1[j]=m1[j-1];
+       }
+
+       m1[0]=auxP;
+
+
+       for(int j=P.size()-1; j>0; j--){
+           P[j]=P[j-1];
+       }
+
+       P[0]=acarreo;
+
+   }
+
+   //FIN AlgoritmoProductoEnterosSinSIgno
+
+   //Paso 3.2
+
+   if(P[0]==0){
+
+       for(int j=0; j<(int)P.size()-1; j++){
+          P[j]=P[j+1];
+       }
+       P[23]=0;
+
+   }else{
+       expProducto= expProducto +1;
+   }
+
+   //Paso 3.3
+
+
+   int r= m1[0];
+
+   //Paso 3.4
+
+   int st=0;
+
+   for(int i=1; i<24 && st==0; i++){
+       if(m1[i]==1){
+          st=1;
+       }
+   }
+
+   //Paso 3.5
+
+   if( (r==1 && st==1) || (r==1 && st==0 && P[23]==1) ){
+
+       vector<int> ceros={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1};
+       int acarreo=0;
+
+
+       for(int j= 23; j>=0; j--){
+
+          if(P[j]+ceros[j]+acarreo==3){
+                P[j]=1;
+                acarreo=1;
+          }else if(P[j]+ceros[j]+acarreo==2){
+                P[j]=0;
+                acarreo=1;
+          }else if(P[j]+ceros[j]+acarreo==1){
+                P[j]=1;
+                acarreo=0;
+          }else{
+                P[j]=0;
+                acarreo=0;
+          }
+      }
+
+
+   }
+
+   //Desbordamientos comprobacion
+
+   //FALTA hacer desbordamiento infinito :(
+
+   //Desbordamiento a cero
+
+
+//   int t;
+
+//   if(expProducto<0){
+
+//       t=0-expProducto;
+
+
+//       if(t>=24){
+
+//       }
+
+//   }
 
 
 
@@ -400,19 +562,8 @@ void menuALU::on_multiplicacion_clicked()
 
 
 
-}
 
 
-void menuALU::on_division_clicked()
-{
-    Numero numero(5);
-    vector<int> vector = enteroTObinario(numero.getExponente(), 8);
-    QString cadena = "";
-    for (int i = 0; i < 8; i++) {
 
-        cadena.append(QString::number(vector[i]));
-    }
-
-    this->ui->division->setText(cadena);
 }
 

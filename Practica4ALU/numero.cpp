@@ -19,8 +19,6 @@ void Numero::floattoIEE (){
     this->exponente=a.bitfield.expo;
     this->pFraccionaria=a.bitfield.partFrac;
 
-
-
 }
 
 int Numero::getExponente(){
@@ -36,21 +34,7 @@ int Numero::getpFraccionaria(){
     return pFraccionaria;
 }
 
-//Arreglar
-vector<int> Numero::getMantisa(){
-   vector<int> mantisa = this->enteroTObinario(this->getExponente(), 23);
-   vector<int> mantisaAux;
-   mantisaAux.push_back(1);
-
-   for (int i = 0; i < 23; i++) {
-
-       mantisaAux.push_back(mantisa[i]);
-   }
-
-   return mantisaAux;
-}
-
-vector<int> Numero::enteroTObinario(int numero, int numByte) {          //metodo para pasar un numero entero a binario
+vector<int> Numero::enteroToBinario(int numero, int numByte) {          //metodo para pasar un numero entero a binario
 
 
     vector<int> binario;
@@ -88,4 +72,24 @@ vector<int> Numero::enteroTObinario(int numero, int numByte) {          //metodo
 
 
     return binario;
+}
+
+
+vector<int> Numero::getMantisa(){
+
+    vector<int> aux;
+
+    aux=this->enteroToBinario(this->getpFraccionaria(), 23);
+
+    vector<int> aux2;
+    aux2.push_back(1);
+
+    for(int i=0; i<23; i++){
+       aux2.push_back(aux[i]);
+    }
+
+
+
+    return aux2;
+
 }
