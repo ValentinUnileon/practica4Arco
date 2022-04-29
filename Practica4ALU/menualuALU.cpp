@@ -89,10 +89,10 @@ void menuALU::on_suma_clicked()
         for(int j= 23; j>=0; j--){
 
            if(mantisa2[j]+ceros[j]+acarreo==3){
-                 P[j]=1;
+                 mantisa2[j]=1;
                  acarreo=1;
            }else if(mantisa2[j]+ceros[j]+acarreo==2){
-                 P[j]=0;
+                 mantisa2[j]=0;
                  acarreo=1;
            }else if(mantisa2[j]+ceros[j]+acarreo==1){
                  mantisa2[j]=1;
@@ -108,15 +108,21 @@ void menuALU::on_suma_clicked()
     //Paso 5
     P= mantisa2;
 
-//Paso 6
+    //Paso 6
+
     //bit de guarda
+
     if(d!=0){
         g= P[d-1];
     }
+
    //bit de redondeo
+
    if(d>=2){
        r= P[d-2];
    }
+
+   //Bit sticky
 
    int var=0;
 
@@ -142,16 +148,22 @@ void menuALU::on_suma_clicked()
         }
 
     }else{
-        for(int i=P.size()-1; i>0; i--){
-            P[i]=P[i-1];
+
+        for(int j=0; j<d; j++){
+
+            for(int i=P.size()-1; i>0; i--){
+                P[i]=P[i-1];
+            }
+
+            P[0]=0;
+
         }
 
-        for(int i=0; i<d; i++){
-            P[i]=0;
-        }
     }
 
 //Paso 8
+
+
     for(int i= 23; i>=0; i--){
 
         if(mantisa1[i]+P[i]+acarreo1==3){
@@ -168,6 +180,8 @@ void menuALU::on_suma_clicked()
             acarreo1=0;
             }
      }
+
+
 
 //Paso 9
 
@@ -325,13 +339,22 @@ void menuALU::on_suma_clicked()
 //Paso 13
 
 
+
+    vector<int> mantisaSumaNormalizada;
+
+    for(int i=1; i<24; i++){
+       mantisaSumaNormalizada.push_back(mantisaSuma[i]);
+    }
+    mantisaSumaNormalizada.push_back(0);
+
+
     vector<int> resultado;
     resultado.push_back(signoSuma);
 
     vector<int> exponenteSumaEnBinario=enteroTObinario(expSuma, 8);
 
     resultado.insert(resultado.end(), exponenteSumaEnBinario.begin(), exponenteSumaEnBinario.end());
-    resultado.insert(resultado.end(), mantisaSuma.begin(), mantisaSuma.end());
+    resultado.insert(resultado.end(), mantisaSumaNormalizada.begin(), mantisaSumaNormalizada.end());
 
 
     QString hola;
