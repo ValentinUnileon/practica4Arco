@@ -450,17 +450,17 @@ void menuALU::on_multiplicacion_clicked()
 
    //*Paso1
 
+   //*Paso 1.1
 
    vector<int> m1=numero1.getMantisa();
    vector<int> m2=numero2.getMantisa();
    vector<int> P;
    int acarreo;
-
    for(int i=0; i<24; i++){
        P.push_back(0);
    }
 
-
+    //*Paso1.2
    for(int i=0; i<24; i++){
 
        if(m1[23]==1){
@@ -483,6 +483,7 @@ void menuALU::on_multiplicacion_clicked()
             }
        }
 
+    }
 
        int auxP=P[23];
 
@@ -499,13 +500,13 @@ void menuALU::on_multiplicacion_clicked()
 
        P[0]=acarreo;
 
-   }
+
 
    //FIN AlgoritmoProductoEnterosSinSIgno
 
    //Paso 3.2
 
-   if(P[0]==0){
+   if(P[1]==0){
 
        for(int j=0; j<(int)P.size()-1; j++){
           P[j]=P[j+1];
@@ -558,6 +559,35 @@ void menuALU::on_multiplicacion_clicked()
 
 
    }
+
+   vector<int> mantisaProductoNormalizada;
+   mantisaP=P;
+   for(int i=1; i<24; i++){
+      mantisaProductoNormalizada.push_back(mantisaP[i]);
+   }
+
+   mantisaProductoNormalizada.push_back(0);
+
+   vector<int> resultado;
+   resultado.push_back(signoProducto);
+
+   vector<int> exponenteProductoEnBinario=enteroTObinario(expProducto, 8);
+
+   resultado.insert(resultado.end(), exponenteProductoEnBinario.begin(), exponenteProductoEnBinario.end());
+   resultado.insert(resultado.end(), mantisaProductoNormalizada.begin(), mantisaProductoNormalizada.end());
+
+
+   QString hola;
+   for(int i=0; i<(int)resultado.size(); i++){
+
+       hola.append(QString::number(resultado[i]));
+   }
+
+   ui->resultadoReal->setText(hola);
+
+
+
+
 
    //Desbordamientos comprobacion
 
