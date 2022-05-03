@@ -560,13 +560,59 @@ void menuALU::on_multiplicacion_clicked()
 
    }
 
+
+   //DESBORDAMIENTOS
+
+
+
+
+
+   if (expProducto > 255) { //OVERFLOW
+
+       //infinito, todo a 1s (menos el signo) y FFFFFFF
+
+       expProducto = 255;
+       P = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+
+
+   }else if (expProducto < 1){
+
+       int t = 1 - expProducto;
+
+       if(t >= 24){
+
+           //UNDERFLOW
+           //Todo a ceros TODO TODO
+
+           expProducto = 0;
+           P = {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+
+
+       }else{
+
+           for(int i = 0; i<t;i++){
+               for(int j=(int)P.size(); j<0; j--){
+                  P[j]=P[j-1];
+               }
+
+               P[0] = 0;
+           }
+
+           expProducto = 1;
+       }
+
+
+
+
+   }
+
    vector<int> mantisaProductoNormalizada;
    mantisaP=P;
    for(int i=1; i<24; i++){
       mantisaProductoNormalizada.push_back(mantisaP[i]);
    }
 
-   mantisaProductoNormalizada.push_back(0);
+   // mantisaProductoNormalizada.push_back(0);
 
    vector<int> resultado;
    resultado.push_back(signoProducto);
@@ -584,8 +630,6 @@ void menuALU::on_multiplicacion_clicked()
    }
 
    ui->resultadoReal->setText(hola);
-
-
 
 
 
