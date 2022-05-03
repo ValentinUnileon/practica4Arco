@@ -456,7 +456,7 @@ void menuALU::on_multiplicacion_clicked()
    vector<int> m2=numero2.getMantisa();
    vector<int> P;
 
-   int acarreo;
+   int acarreo=0;
 
    for(int i=0; i<24; i++){
        P.push_back(0);
@@ -467,6 +467,7 @@ void menuALU::on_multiplicacion_clicked()
 
        if(m1[23]==1){
 
+           acarreo=0;
            for(int j= 23; j>=0; j--){
 
                if(P[j]+m2[j]+acarreo==3){
@@ -482,20 +483,22 @@ void menuALU::on_multiplicacion_clicked()
                    P[j]=0;
                    acarreo=0;
                    }
-            }
+           }
+       }else{
+           acarreo=0;
        }
 
 
        int auxP=P[23];
 
-       for(int j=m1.size()-1; j>0; j--){
+       for(int j=23; j>0; j--){
            m1[j]=m1[j-1];
        }
 
        m1[0]=auxP;
 
 
-       for(int j=P.size()-1; j>0; j--){
+       for(int j=23; j>0; j--){
            P[j]=P[j-1];
        }
 
@@ -511,12 +514,21 @@ void menuALU::on_multiplicacion_clicked()
 
    //Paso 3.2
 
-   if(P[1]==0){
+   if(P[0]==0){     //CUIDADO PUEDE QUE ESTE MAL AUUAAUYAYAYAYAYAYAYAYAY
 
        for(int j=0; j<(int)P.size()-1; j++){
           P[j]=P[j+1];
        }
-       P[23]=0;
+
+       P[23]=m1[0];
+
+       for(int j=0; j<(int)m1.size()-1; j++){
+          m1[j]=m1[j+1];
+       }
+       m1[23]=0;
+
+
+
 
    }else{
        expProducto= expProducto +1;
@@ -525,7 +537,7 @@ void menuALU::on_multiplicacion_clicked()
    //Paso 3.3
 
 
-   int r= m1[1];
+   int r= m1[0];
 
    //Paso 3.4
 
@@ -541,19 +553,19 @@ void menuALU::on_multiplicacion_clicked()
 
    if( (r==1 && st==1) || (r==1 && st==0 && P[23]==1) ){
 
-       vector<int> ceros={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1};
+       vector<int> uno={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1};
        int acarreo=0;
 
 
        for(int j= 23; j>=0; j--){
 
-          if(P[j]+ceros[j]+acarreo==3){
+          if(P[j]+uno[j]+acarreo==3){
                 P[j]=1;
                 acarreo=1;
-          }else if(P[j]+ceros[j]+acarreo==2){
+          }else if(P[j]+uno[j]+acarreo==2){
                 P[j]=0;
                 acarreo=1;
-          }else if(P[j]+ceros[j]+acarreo==1){
+          }else if(P[j]+uno[j]+acarreo==1){
                 P[j]=1;
                 acarreo=0;
           }else{
@@ -567,8 +579,6 @@ void menuALU::on_multiplicacion_clicked()
 
 
    //DESBORDAMIENTOS
-
-
 
 
 
@@ -643,7 +653,7 @@ void menuALU::on_multiplicacion_clicked()
 
    }
 
-   //3
+   //3   :(
 
    if( expProducto==1){
 
