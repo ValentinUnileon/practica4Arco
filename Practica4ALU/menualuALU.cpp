@@ -455,7 +455,9 @@ void menuALU::on_multiplicacion_clicked()
    vector<int> m1=numero1.getMantisa();
    vector<int> m2=numero2.getMantisa();
    vector<int> P;
+
    int acarreo;
+
    for(int i=0; i<24; i++){
        P.push_back(0);
    }
@@ -483,7 +485,6 @@ void menuALU::on_multiplicacion_clicked()
             }
        }
 
-    }
 
        int auxP=P[23];
 
@@ -499,6 +500,10 @@ void menuALU::on_multiplicacion_clicked()
        }
 
        P[0]=acarreo;
+
+    }
+
+
 
 
 
@@ -520,7 +525,7 @@ void menuALU::on_multiplicacion_clicked()
    //Paso 3.3
 
 
-   int r= m1[0];
+   int r= m1[1];
 
    //Paso 3.4
 
@@ -581,17 +586,18 @@ void menuALU::on_multiplicacion_clicked()
 
        if(t >= 24){
 
-           //UNDERFLOW
+           // HAY UNDERFLOW
            //Todo a ceros TODO TODO
 
-           expProducto = 0;
+           expProducto = 1;
            P = {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
 
        }else{
 
-           for(int i = 0; i<t;i++){
-               for(int j=(int)P.size(); j<0; j--){
+           for(int i=0; i<t; i++){
+
+               for(int j=(int)P.size(); j>0; j--){
                   P[j]=P[j-1];
                }
 
@@ -601,10 +607,59 @@ void menuALU::on_multiplicacion_clicked()
            expProducto = 1;
        }
 
+   }
 
+   //Denormales
 
+   //1
+   //2
+
+   if(expProducto>1){
+       int t1 = expProducto-1;
+       int t2;
+       bool encontrado=false;
+
+       for(int i=0; i<(int)P.size() && encontrado!=true ; i++){
+
+           if(P[i]==1){
+               encontrado=true;
+           }else{
+               t2=t2+1;
+           }
+
+       }
+
+       int tMin = min(t1, t2);
+       expProducto=expProducto-tMin;
+
+       for(int i = 0; i<tMin;i++){
+
+           for(int j=0; j<(int)P.size(); j++){
+              P[j]=P[j+1];
+           }
+
+           P[23] = 0;
+       }
 
    }
+
+   //3
+
+   if( expProducto==1){
+
+       //PREGUNTAR POR CORREO IMPORTANTE IMPORTANTE IMPORTANTE IMPORTANTE IMPORTANTE IMPORTANTE
+
+   }
+
+
+
+   //falta OPERANDOS CERO
+
+
+
+
+
+
 
    vector<int> mantisaProductoNormalizada;
    mantisaP=P;
