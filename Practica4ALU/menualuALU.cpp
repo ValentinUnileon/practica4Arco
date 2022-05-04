@@ -413,13 +413,8 @@ vector<int> menuALU::enteroTObinario(int numero, int numByte) {          //metod
 
 
 
+vector<int> menuALU::multiplicacion(){
 
-
-
-
-
-void menuALU::on_multiplicacion_clicked()
-{
     float valor1=ui->textoRealOp1->text().toFloat();
     float valor2=ui->textoRealOp2->text().toFloat();
 
@@ -438,7 +433,7 @@ void menuALU::on_multiplicacion_clicked()
    int signoProducto=s1*s2;
 
    //Paso2
-   int expProducto=exp1+exp2 -127;
+   int expProducto=exp1+exp2 -127;  //IMPORTANTE  IMPORTANTEIMPORTANTEIMPORTANTEIMPORTANTEIMPORTANTEIMPORTANTEIMPORTANTEIMPORTANTE
 
    //Paso3
 
@@ -514,7 +509,7 @@ void menuALU::on_multiplicacion_clicked()
 
    //Paso 3.2
 
-   if(P[0]==0){     //CUIDADO PUEDE QUE ESTE MAL AUUAAUYAYAYAYAYAYAYAYAY
+   if(P[0]==0){
 
        for(int j=0; j<(int)P.size()-1; j++){
           P[j]=P[j+1];
@@ -626,7 +621,7 @@ void menuALU::on_multiplicacion_clicked()
 
    if(expProducto>1){
        int t1 = expProducto-1;
-       int t2;
+       int t2=0;
        bool encontrado=false;
 
        for(int i=0; i<(int)P.size() && encontrado!=true ; i++){
@@ -658,6 +653,7 @@ void menuALU::on_multiplicacion_clicked()
    if( expProducto==1){
 
        //PREGUNTAR POR CORREO IMPORTANTE IMPORTANTE IMPORTANTE IMPORTANTE IMPORTANTE IMPORTANTE
+       //poner NAN
 
    }
 
@@ -688,44 +684,115 @@ void menuALU::on_multiplicacion_clicked()
    resultado.insert(resultado.end(), mantisaProductoNormalizada.begin(), mantisaProductoNormalizada.end());
 
 
-   QString hola;
-   for(int i=0; i<(int)resultado.size(); i++){
-
-       hola.append(QString::number(resultado[i]));
-   }
-
-   ui->resultadoReal->setText(hola);
-
-
+    return resultado;
 
    //Desbordamientos comprobacion
 
    //FALTA hacer desbordamiento infinito :(
 
    //Desbordamiento a cero
+}
 
 
-//   int t;
+void menuALU::on_multiplicacion_clicked()
+{
+    vector<int> resultado= this->multiplicacion();
 
-//   if(expProducto<0){
+    QString hola;
+    for(int i=0; i<(int)resultado.size(); i++){
 
-//       t=0-expProducto;
+        hola.append(QString::number(resultado[i]));
+    }
 
-
-//       if(t>=24){
-
-//       }
-
-//   }
-
-
-
-
-
-
-
-
+    ui->resultadoReal->setText(hola);
+    ui->resultadoHexadecimal->setText(binarytoHexadecimal(resultado));
 
 
 }
+
+
+QString menuALU::binarytoHexadecimal(vector<int> cadenaIEEE){
+
+
+    int resultado=0;
+    vector<int> cuatros;
+    int recorreCuatros=0;
+    QString final;
+
+
+
+    for (int i=0; i<8; i++){
+
+       for(int j=i*4; j<(i*4)+4; j++){
+
+         cuatros.push_back(cadenaIEEE[j]);
+         recorreCuatros=recorreCuatros+1;
+
+       }
+
+       resultado = binaryToReal(cuatros);
+
+       if(resultado < 10){
+
+           final.append(QString::number(resultado));
+
+       }else{
+
+           switch(resultado){
+            case 10:
+                final.append("A");
+            break;
+
+            case 11:
+                final.append("B");
+            break;
+
+            case 12:
+                final.append("C");
+            break;
+
+            case 13:
+                final.append("D");
+            break;
+
+            case 14:
+                final.append("E");
+            break;
+
+            case 15:
+                final.append("F");
+            break;
+
+           }
+
+       }
+
+    }
+
+
+    return final;
+}
+
+
+
+int menuALU::binaryToReal(vector<int> cuatros){
+
+    int resultado=0;
+
+    for(int i=0; i<(int)cuatros.size(); i++){
+
+        if(cuatros[i]==1){
+            resultado=2^((cuatros.size()-1)-i);
+        }
+
+    }
+
+    return resultado;
+
+
+}
+
+
+
+
 

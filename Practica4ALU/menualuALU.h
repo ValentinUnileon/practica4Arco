@@ -22,6 +22,9 @@ private slots:
     vector<int> enteroTObinario(int numero, int numByte);
 
     void on_multiplicacion_clicked();
+    vector<int> multiplicacion();
+    QString binarytoHexadecimal(vector<int> cadenaIEEE);
+    int binaryToReal(vector<int> cuatros);
 
 private:
     Ui::menuALU *ui;
