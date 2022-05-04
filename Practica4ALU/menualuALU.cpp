@@ -438,7 +438,7 @@ void menuALU::on_multiplicacion_clicked()
    int signoProducto=s1*s2;
 
    //Paso2
-   int expProducto=exp1+exp2;
+   int expProducto=exp1+exp2 -127;
 
    //Paso3
 
