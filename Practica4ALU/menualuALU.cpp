@@ -714,31 +714,32 @@ void menuALU::on_multiplicacion_clicked()
 QString menuALU::binarytoHexadecimal(vector<int> cadenaIEEE){
 
 
-    int resultado=0;
-    vector<int> cuatros;
-    int recorreCuatros=0;
-    QString final;
+    int numeroResultado=0;
+    vector<int> cuatros={0,0,0,0};
+    QString final="";
 
 
 
     for (int i=0; i<8; i++){
 
+       cuatros.clear();
+
        for(int j=i*4; j<(i*4)+4; j++){
 
          cuatros.push_back(cadenaIEEE[j]);
-         recorreCuatros=recorreCuatros+1;
+
 
        }
 
-       resultado = binaryToReal(cuatros);
+       numeroResultado = binaryToReal(cuatros);
 
-       if(resultado < 10){
+       if(numeroResultado < 10){
 
-           final.append(QString::number(resultado));
+           final.append(QString::number(numeroResultado));
 
        }else{
 
-           switch(resultado){
+           switch(numeroResultado){
             case 10:
                 final.append("A");
             break;
@@ -779,10 +780,11 @@ int menuALU::binaryToReal(vector<int> cuatros){
 
     int resultado=0;
 
-    for(int i=0; i<(int)cuatros.size(); i++){
+    for(int i=0; i<4; i++){
+
 
         if(cuatros[i]==1){
-            resultado=2^((cuatros.size()-1)-i);
+            resultado=resultado+ pow(2, 3-i);
         }
 
     }

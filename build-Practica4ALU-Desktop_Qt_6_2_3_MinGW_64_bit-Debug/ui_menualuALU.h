@@ -90,7 +90,7 @@ public:
         multiplicacion->setFont(font1);
         division = new QPushButton(centralwidget);
         division->setObjectName(QString::fromUtf8("division"));
-        division->setGeometry(QRect(370, 230, 361, 71));
+        division->setGeometry(QRect(370, 230, 111, 71));
         division->setFont(font1);
         textoRealOp1 = new QLineEdit(centralwidget);
         textoRealOp1->setObjectName(QString::fromUtf8("textoRealOp1"));
