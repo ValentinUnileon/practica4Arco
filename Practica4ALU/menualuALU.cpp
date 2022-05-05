@@ -704,9 +704,14 @@ void menuALU::on_multiplicacion_clicked()
         hola.append(QString::number(resultado[i]));
     }
 
-    ui->resultadoReal->setText(hola);
+    ui->resultadoIEEE->setText(hola);
     ui->resultadoHexadecimal->setText(binarytoHexadecimal(resultado));
 
+    Numero resultadoAux(resultado);
+
+    QString stringReal = QString::number(resultadoAux.numero);
+
+    ui->resultadoReal->setText(stringReal);
 
 }
 
@@ -780,11 +785,11 @@ int menuALU::binaryToReal(vector<int> cuatros){
 
     int resultado=0;
 
-    for(int i=0; i<4; i++){
+    for(int i=0; i<(int)cuatros.size(); i++){
 
 
         if(cuatros[i]==1){
-            resultado=resultado+ pow(2, 3-i);
+            resultado=resultado+ pow(2, cuatros.size()-1-i);
         }
 
     }

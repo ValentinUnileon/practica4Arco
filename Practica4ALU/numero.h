@@ -12,7 +12,7 @@ public:
 
     Numero(float numero);
 
-
+    Numero(vector<int> vectorIEEE);
 
     union Code {
 
@@ -33,6 +33,8 @@ public:
     void floattoIEE2 ();
     void IEEtofloat ();
     void IEEtofloat2 ();
+
+    int binaryToReal(vector<int> numeroBinario);
 
     int exponente;
     int pFraccionaria;

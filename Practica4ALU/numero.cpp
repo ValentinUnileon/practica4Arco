@@ -1,5 +1,6 @@
 #include "numero.h"
 #include <iostream>
+#include <math.h>
 
 using namespace std;
 
@@ -7,6 +8,32 @@ Numero::Numero(float numero)
 {
         this->numero=numero;
         floattoIEE();
+
+}
+
+Numero::Numero(vector<int> vectorIEEE)
+{
+        int signoNumero = vectorIEEE[0];
+        vector<int> exponenteNumero;
+        vector<int> pFraccionariaNumero;
+
+        for(int i=1; i<9; i++){
+
+            exponenteNumero.push_back(vectorIEEE[i]);
+        }
+
+        for(int i=9; i<32; i++){
+
+            pFraccionariaNumero.push_back(vectorIEEE[i]);
+        }
+
+        union Code a;
+
+        a.bitfield.sign = signoNumero;
+        a.bitfield.expo = this->binaryToReal(exponenteNumero);
+        a.bitfield.partFrac = this->binaryToReal(pFraccionariaNumero);
+
+        this->numero = a.numero;
 
 }
 
@@ -91,5 +118,23 @@ vector<int> Numero::getMantisa(){
 
 
     return aux2;
+
+}
+
+int Numero::binaryToReal(vector<int> cuatros){
+
+    int resultado=0;
+
+    for(int i=0; i<(int)cuatros.size(); i++){
+
+
+        if(cuatros[i]==1){
+            resultado=resultado+ pow(2, cuatros.size()-1-i);
+        }
+
+    }
+
+    return resultado;
+
 
 }
