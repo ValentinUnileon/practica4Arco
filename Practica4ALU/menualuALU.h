@@ -2,6 +2,7 @@
 #define MENUALU_H
 
 #include <QMainWindow>
+#include <numero.h>
 
 using namespace std;
 
@@ -17,8 +18,8 @@ public:
     menuALU(QWidget *parent = nullptr);
     ~menuALU();
 
-    vector<int> suma();
-    vector<int> multiplicacion();
+    vector<int> suma(Numero numero1, Numero numero2);
+    vector<int> multiplicacion(Numero numero1, Numero numero2);
 
 private slots:
     void on_suma_clicked();
@@ -28,6 +29,8 @@ private slots:
 
     QString binarytoHexadecimal(vector<int> cadenaIEEE);
     int binaryToReal(vector<int> cuatros);
+
+    void on_division_clicked();
 
 private:
     Ui::menuALU *ui;

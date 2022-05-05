@@ -19,14 +19,7 @@ menuALU::~menuALU()
 
 }
 
-vector<int> menuALU::suma(){
-
-    float valor1=ui->textoRealOp1->text().toFloat();
-    float valor2=ui->textoRealOp2->text().toFloat();
-
-
-    Numero numero1(valor1);
-    Numero numero2(valor2);
+vector<int> menuALU::suma(Numero numero1, Numero numero2){
 
     //Paso 1
     int g= 0;
@@ -38,8 +31,7 @@ vector<int> menuALU::suma(){
     int acarreo2=0;
     int signoSuma=0;
 
-    vector<int> mantisa1=numero1.getMantisa();
-    vector<int> mantisa2=numero2.getMantisa();
+
     vector<int> mantisaSuma;
 
     vector<int> P;
@@ -59,6 +51,9 @@ vector<int> menuALU::suma(){
 
       operandosInter=true;
     }
+
+    vector<int> mantisa1=numero1.getMantisa();
+    vector<int> mantisa2=numero2.getMantisa();
 
     //Paso 3
     expSuma=numero1.getExponente();
@@ -107,13 +102,13 @@ vector<int> menuALU::suma(){
     //bit de guarda
 
     if(d!=0){                   //TODO CUIDADO
-        g= P[d-1];
+        g= P[23-d+1];
     }
 
    //bit de redondeo
 
    if(d>=2){
-       r= P[d-2];           // ESTO DA ERROR AVISO CUIDADO
+       r= P[23-d+2];           // ESTO DA ERROR AVISO CUIDADO
    }
 
    //Bit sticky
@@ -122,7 +117,7 @@ vector<int> menuALU::suma(){
 
    if(d>=3){
         for(int i=3; i<(int)P.size(); i++){
-            if(P[d-i]==1){
+            if(P[23-d+i]==1){
                 var=1;
 
             }
@@ -225,7 +220,7 @@ vector<int> menuALU::suma(){
             st=1;
         }
 
-        r=P[0];             //AVISO AVISO AVISO AVISO AVISO
+        r=P[23];             //AVISO AVISO AVISO AVISO AVISO
 
         for(int i=P.size()-1; i>0; i--){
             P[i]=P[i-1];
@@ -274,7 +269,7 @@ vector<int> menuALU::suma(){
             for(int j=0; j<(int)P.size()-1; j++){
                P[j]=P[j+1];
             }
-            P[0]=g;         //AVISO AVISO CUIDADO CUIDADO
+            P[23]=g;         //AVISO AVISO CUIDADO CUIDADO
 
         }
 
@@ -284,7 +279,7 @@ vector<int> menuALU::suma(){
 //Paso 11
 
 
-    if( (r==1 && st==1) || (r==1 && st==0 && P[0]==1) ) {  // CUIDADO CUIDADO AVISO AVISO
+    if( (r==1 && st==1) || (r==1 && st==0 && P[23]==1) ) {  // CUIDADO CUIDADO AVISO AVISO
 
         vector<int> aux ={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1};
         int acarreoAUX=0;
@@ -431,7 +426,7 @@ void menuALU::on_suma_clicked()
     this->ui->textoIEEEOp1->setText(cadenaIEEE1);
     this->ui->textoIEEEOp2->setText(cadenaIEEE2);
 
-    vector<int> resultado=suma();
+    vector<int> resultado=suma(numero1, numero2);
 
     QString hola;
 
@@ -497,14 +492,9 @@ vector<int> menuALU::enteroTObinario(int numero, int numByte) {          //metod
 
 
 
-vector<int> menuALU::multiplicacion(){
-
-    float valor1=ui->textoRealOp1->text().toFloat();
-    float valor2=ui->textoRealOp2->text().toFloat();
+vector<int> menuALU::multiplicacion(Numero numero1, Numero numero2){
 
 
-    Numero numero1(valor1);
-    Numero numero2(valor2);
 
 
    int s1=numero1.getSigno();
@@ -777,6 +767,33 @@ vector<int> menuALU::multiplicacion(){
    //Desbordamiento a cero
 }
 
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+
+
 
 void menuALU::on_multiplicacion_clicked()
 {
@@ -825,9 +842,9 @@ void menuALU::on_multiplicacion_clicked()
     }
 
     this->ui->textoIEEEOp1->setText(cadenaIEEE1);
-    this->ui->textoIEEEOp2->setText(cadenaIEEE2);
+    this->ui->textoIEEEOp2->setText(cadenaIEEE2); 
 
-    vector<int> resultado= this->multiplicacion();
+    vector<int> resultado= this->multiplicacion(numero1, numero2);
 
     QString hola;
 
@@ -932,4 +949,70 @@ int menuALU::binaryToReal(vector<int> cuatros){
 
 
 
+
+
+void menuALU::on_division_clicked()
+{
+    float valor1=ui->textoRealOp1->text().toFloat();
+    float valor2=ui->textoRealOp2->text().toFloat();
+
+
+    Numero numero1(valor1);
+    Numero numero2(valor2);
+
+
+   int s1=numero1.getSigno();
+   int s2=numero2.getSigno();
+   int exp1=numero1.getExponente();
+   int exp2=numero2.getExponente();
+   vector<int> mantisa1 = numero1.getMantisa();
+   vector<int> mantisa2 = numero2.getMantisa();
+
+   float valorEscalado1 = 1;
+   float valorEscalado2 = 1;
+
+   //Paso 1
+   // Sacamos el valor decimal de la parte entera de la mantisa
+   for (int i=1; i<=23; i++){
+
+      if (mantisa1[i]==1){
+
+          valorEscalado1=valorEscalado1+(1/pow(2, i));
+      }
+
+      if (mantisa2[i]==1){
+
+          valorEscalado2=valorEscalado2+(1/pow(2, i));
+      }
+   }
+
+   //Tabla para aproximar el inverso de un numero real
+   float bPrima=0;
+
+   if (valorEscalado2<1.25){
+
+     bPrima=1;
+   }else{
+
+     bPrima=0.8;
+   }
+
+   //Calculo del signo de la division
+   int signoDivision=0;
+
+   if (s1!=s2){
+       signoDivision=1;
+   }
+
+
+   Numero numeroA(valorEscalado1);
+   Numero numeroBPrima(bPrima);
+   Numero numeroB(valorEscalado2);
+
+
+   vector<int> x=multiplicacion(numeroA, numeroBPrima);
+   vector<int> y=multiplicacion(numeroB, numeroBPrima);
+
+
+}
 
