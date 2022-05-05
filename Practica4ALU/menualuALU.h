@@ -17,12 +17,15 @@ public:
     menuALU(QWidget *parent = nullptr);
     ~menuALU();
 
+    vector<int> suma();
+    vector<int> multiplicacion();
+
 private slots:
     void on_suma_clicked();
     vector<int> enteroTObinario(int numero, int numByte);
 
     void on_multiplicacion_clicked();
-    vector<int> multiplicacion();
+
     QString binarytoHexadecimal(vector<int> cadenaIEEE);
     int binaryToReal(vector<int> cuatros);
 

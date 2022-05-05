@@ -17,15 +17,9 @@ menuALU::~menuALU()
 {
     delete ui;
 
-
-
-
-
 }
 
-
-void menuALU::on_suma_clicked()
-{
+vector<int> menuALU::suma(){
 
     float valor1=ui->textoRealOp1->text().toFloat();
     float valor2=ui->textoRealOp2->text().toFloat();
@@ -39,10 +33,10 @@ void menuALU::on_suma_clicked()
     int r= 0;
     int st= 0;
     int n= 24;
-    int d;
+    int d=0;
     int acarreo1=0;
     int acarreo2=0;
-    int signoSuma;
+    int signoSuma=0;
 
     vector<int> mantisa1=numero1.getMantisa();
     vector<int> mantisa2=numero2.getMantisa();
@@ -112,14 +106,14 @@ void menuALU::on_suma_clicked()
 
     //bit de guarda
 
-    if(d!=0){
+    if(d!=0){                   //TODO CUIDADO
         g= P[d-1];
     }
 
    //bit de redondeo
 
    if(d>=2){
-       r= P[d-2];
+       r= P[d-2];           // ESTO DA ERROR AVISO CUIDADO
    }
 
    //Bit sticky
@@ -139,12 +133,13 @@ void menuALU::on_suma_clicked()
 //Paso 7
     if(numero1.getSigno()!= numero2.getSigno()){
 
-        for(int i=P.size()-1; i>0; i--){
-            P[i]=P[i-1];
-        }
+        for(int j=0; j<d; j++){
 
-        for(int i=0; i<d; i++){
-            P[i]=1;
+            for(int i=P.size()-1; i>0; i--){
+                P[i]=P[i-1];
+            }
+
+            P[0] = 1;
         }
 
     }else{
@@ -230,7 +225,7 @@ void menuALU::on_suma_clicked()
             st=1;
         }
 
-        r=P[0];
+        r=P[0];             //AVISO AVISO AVISO AVISO AVISO
 
         for(int i=P.size()-1; i>0; i--){
             P[i]=P[i-1];
@@ -279,7 +274,7 @@ void menuALU::on_suma_clicked()
             for(int j=0; j<(int)P.size()-1; j++){
                P[j]=P[j+1];
             }
-            P[23]=g;
+            P[0]=g;         //AVISO AVISO CUIDADO CUIDADO
 
         }
 
@@ -289,7 +284,7 @@ void menuALU::on_suma_clicked()
 //Paso 11
 
 
-    if( (r==1 && st==1) || (r==1 && st==0 && P[0]==1) ) {
+    if( (r==1 && st==1) || (r==1 && st==0 && P[0]==1) ) {  // CUIDADO CUIDADO AVISO AVISO
 
         vector<int> aux ={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1};
         int acarreoAUX=0;
@@ -311,14 +306,14 @@ void menuALU::on_suma_clicked()
              }
         }
 
-        acarreo2=acarreo1;
+        acarreo2=acarreoAUX;
 
         if(acarreo2==1){
 
-            for(int j=23; j<0; j++){
+            for(int j=23; j>0; j--){
                P[j]=P[j-1];
             }
-            P[0]=1;
+            P[0]=acarreo2;
 
             expSuma=expSuma+1;
         }
@@ -345,7 +340,8 @@ void menuALU::on_suma_clicked()
     for(int i=1; i<24; i++){
        mantisaSumaNormalizada.push_back(mantisaSuma[i]);
     }
-    mantisaSumaNormalizada.push_back(0);
+
+    // mantisaSumaNormalizada.push_back(0);
 
 
     vector<int> resultado;
@@ -356,14 +352,102 @@ void menuALU::on_suma_clicked()
     resultado.insert(resultado.end(), exponenteSumaEnBinario.begin(), exponenteSumaEnBinario.end());
     resultado.insert(resultado.end(), mantisaSumaNormalizada.begin(), mantisaSumaNormalizada.end());
 
+    return resultado;
+}
+
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+///////////////////////////////////
+
+
+void menuALU::on_suma_clicked()
+{
+
+    float valor1=ui->textoRealOp1->text().toFloat();
+    float valor2=ui->textoRealOp2->text().toFloat();
+
+    Numero numero1(valor1);
+    Numero numero2(valor2);
+
+    vector<int> ieee1;
+    vector<int> ieee2;
+    vector<int> exponente1 = this->enteroTObinario(numero1.getExponente(), 8);
+    vector<int> exponente2 = this->enteroTObinario(numero2.getExponente(), 8);
+    vector<int> pFraccionaria1 = this->enteroTObinario(numero1.getpFraccionaria(), 23);
+    vector<int> pFraccionaria2 = this->enteroTObinario(numero2.getpFraccionaria(), 23);
+
+    ieee1.push_back(numero1.getSigno());
+    ieee2.push_back(numero2.getSigno());
+
+    for(int i=0; i<8; i++){
+
+        ieee1.push_back(exponente1[i]);
+        ieee2.push_back(exponente2[i]);
+    }
+
+    for(int i=0; i<23; i++){
+
+        ieee1.push_back(pFraccionaria1[i]);
+        ieee2.push_back(pFraccionaria2[i]);
+    }
+
+    QString cadenaHexadeci1 = binarytoHexadecimal(ieee1);
+    QString cadenaHexadeci2 = binarytoHexadecimal(ieee2);
+
+    this->ui->textoHexadecimalOp1->setText(cadenaHexadeci1);
+    this->ui->textoHexadecimalOp2->setText(cadenaHexadeci2);
+
+    QString cadenaIEEE1;
+    QString cadenaIEEE2;
+
+    for(int i=0; i<32; i++){
+
+        cadenaIEEE1.append(QString::number(ieee1[i]));
+        cadenaIEEE2.append(QString::number(ieee2[i]));
+    }
+
+    this->ui->textoIEEEOp1->setText(cadenaIEEE1);
+    this->ui->textoIEEEOp2->setText(cadenaIEEE2);
+
+    vector<int> resultado=suma();
 
     QString hola;
-    for(int i=0; i<(int)resultado.size(); i++){
+
+    for(int i=0; i<32; i++){
 
         hola.append(QString::number(resultado[i]));
     }
 
-    ui->resultadoReal->setText(hola);
+    ui->resultadoIEEE->setText(hola);
+    ui->resultadoHexadecimal->setText(binarytoHexadecimal(resultado));
+
+    Numero resultadoAux(resultado);
+
+    QString stringReal = QString::number(resultadoAux.numero);
+
+    ui->resultadoReal->setText(stringReal);
 
 }
 
@@ -439,7 +523,7 @@ vector<int> menuALU::multiplicacion(){
 
    //Paso 3.1
 
-    //AlgoritmoProductoEnterosSinSIgno
+   //AlgoritmoProductoEnterosSinSIgno
 
    vector<int> mantisaP;
 
@@ -696,10 +780,58 @@ vector<int> menuALU::multiplicacion(){
 
 void menuALU::on_multiplicacion_clicked()
 {
+
+    float valor1=ui->textoRealOp1->text().toFloat();
+    float valor2=ui->textoRealOp2->text().toFloat();
+
+    Numero numero1(valor1);
+    Numero numero2(valor2);
+
+    vector<int> ieee1;
+    vector<int> ieee2;
+    vector<int> exponente1 = this->enteroTObinario(numero1.getExponente(), 8);
+    vector<int> exponente2 = this->enteroTObinario(numero2.getExponente(), 8);
+    vector<int> pFraccionaria1 = this->enteroTObinario(numero1.getpFraccionaria(), 23);
+    vector<int> pFraccionaria2 = this->enteroTObinario(numero2.getpFraccionaria(), 23);
+
+    ieee1.push_back(numero1.getSigno());
+    ieee2.push_back(numero2.getSigno());
+
+    for(int i=0; i<8; i++){
+
+        ieee1.push_back(exponente1[i]);
+        ieee2.push_back(exponente2[i]);
+    }
+
+    for(int i=0; i<23; i++){
+
+        ieee1.push_back(pFraccionaria1[i]);
+        ieee2.push_back(pFraccionaria2[i]);
+    }
+
+    QString cadenaHexadeci1 = binarytoHexadecimal(ieee1);
+    QString cadenaHexadeci2 = binarytoHexadecimal(ieee2);
+
+    this->ui->textoHexadecimalOp1->setText(cadenaHexadeci1);
+    this->ui->textoHexadecimalOp2->setText(cadenaHexadeci2);
+
+    QString cadenaIEEE1;
+    QString cadenaIEEE2;
+
+    for(int i=0; i<32; i++){
+
+        cadenaIEEE1.append(QString::number(ieee1[i]));
+        cadenaIEEE2.append(QString::number(ieee2[i]));
+    }
+
+    this->ui->textoIEEEOp1->setText(cadenaIEEE1);
+    this->ui->textoIEEEOp2->setText(cadenaIEEE2);
+
     vector<int> resultado= this->multiplicacion();
 
     QString hola;
-    for(int i=0; i<(int)resultado.size(); i++){
+
+    for(int i=0; i<32; i++){
 
         hola.append(QString::number(resultado[i]));
     }
@@ -732,8 +864,6 @@ QString menuALU::binarytoHexadecimal(vector<int> cadenaIEEE){
        for(int j=i*4; j<(i*4)+4; j++){
 
          cuatros.push_back(cadenaIEEE[j]);
-
-
        }
 
        numeroResultado = binaryToReal(cuatros);
