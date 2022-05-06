@@ -34,6 +34,38 @@ Numero::Numero(vector<int> vectorIEEE)
         a.bitfield.partFrac = this->binaryToReal(pFraccionariaNumero);
 
         this->numero = a.numero;
+        this->signo=a.bitfield.sign;
+        this->exponente=a.bitfield.expo;
+        this->pFraccionaria=a.bitfield.partFrac;
+
+}
+
+void Numero::setNuevoNumero(vector<int> vectorIEEE){
+
+    int signoNumero = vectorIEEE[0];
+    vector<int> exponenteNumero;
+    vector<int> pFraccionariaNumero;
+
+    for(int i=1; i<9; i++){
+
+        exponenteNumero.push_back(vectorIEEE[i]);
+    }
+
+    for(int i=9; i<32; i++){
+
+        pFraccionariaNumero.push_back(vectorIEEE[i]);
+    }
+
+    union Code a;
+
+    a.bitfield.sign = signoNumero;
+    a.bitfield.expo = this->binaryToReal(exponenteNumero);
+    a.bitfield.partFrac = this->binaryToReal(pFraccionariaNumero);
+
+    this->numero = a.numero;
+    this->signo=a.bitfield.sign;
+    this->exponente=a.bitfield.expo;
+    this->pFraccionaria=a.bitfield.partFrac;
 
 }
 
@@ -136,5 +168,42 @@ int Numero::binaryToReal(vector<int> cuatros){
 
     return resultado;
 
+}
 
+void Numero::setSigno(int signo){
+
+    union Code a;
+
+    a.bitfield.sign = signo;
+    a.bitfield.expo = this->exponente;
+    a.bitfield.partFrac = this->pFraccionaria;
+
+    this->numero = a.numero;
+    this->signo=a.bitfield.sign;
+    this->exponente=a.bitfield.expo;
+    this->pFraccionaria=a.bitfield.partFrac;
+}
+
+vector<int> Numero::getIEE(){
+
+    vector<int> retorno;
+    vector<int> exponenteBin = enteroToBinario(this->exponente, 8);
+    vector<int> pFraccBin = enteroToBinario(this->pFraccionaria, 23);
+
+    retorno.push_back(this->signo);
+
+    for(int i=0; i<8; i++){
+        retorno.push_back(exponenteBin[i]);
+    }
+
+    for(int i=0; i<23; i++){
+        retorno.push_back(pFraccBin[i]);
+    }
+
+    return retorno;
+}
+
+float Numero::getFloat(){
+
+    return this->numero;
 }

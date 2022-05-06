@@ -14,6 +14,8 @@ public:
 
     Numero(vector<int> vectorIEEE);
 
+    void setNuevoNumero(vector<int> vectorIEEE);
+
     union Code {
 
         struct{
@@ -46,9 +48,11 @@ public:
     int getExponente();
     int getpFraccionaria();
     int getSigno();
+    void setSigno(int signo);
+    float getFloat();
     vector<int> enteroToBinario(int numero, int numByte);
     vector<int> getMantisa();
-
+    vector<int> getIEE();
 
 };
 

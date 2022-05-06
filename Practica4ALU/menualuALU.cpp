@@ -380,8 +380,63 @@ vector<int> menuALU::suma(Numero numero1, Numero numero2){
 void menuALU::on_suma_clicked()
 {
 
-    float valor1=ui->textoRealOp1->text().toFloat();
-    float valor2=ui->textoRealOp2->text().toFloat();
+
+    QString cadena1=ui->textoRealOp1->text();
+    QString cadena2=ui->textoRealOp2->text();
+
+    QString aux1;
+    QString aux2;
+
+    float valor1 = 0;
+    float valor2 = 0;
+
+    int encontrado = 0;
+    int posicion1 = -1;
+    int posicion2 = -1;
+
+    for (int i =0; i<cadena1.length(); i++){
+
+        if (cadena1.at(i) == 'E'){
+
+            encontrado = 1;
+            posicion1 = i;
+        }
+    }
+
+    for (int i =0; i<cadena2.length(); i++){
+
+        if (cadena2.at(i) == 'E'){
+
+            encontrado = 1;
+            posicion2 = i;
+        }
+    }
+
+    if (encontrado == 1){
+
+        if(posicion1 != -1){
+
+            aux1 = cadena1.mid(posicion1+1,(cadena1.length()-posicion1+1));
+            aux2 = cadena1.mid(0, posicion1);
+
+            valor1 = aux2.toFloat()*pow(10, aux1.toFloat());
+        }
+
+        if(posicion2 != -1){
+
+            aux1 = cadena2.mid(posicion2+1,(cadena2.length()-posicion2+1));
+            aux2 = cadena2.mid(0, posicion2);
+
+            valor2 = aux2.toFloat()*pow(10, aux1.toFloat());
+        }
+
+    }else{
+
+        valor1=ui->textoRealOp1->text().toFloat();
+        valor2=ui->textoRealOp2->text().toFloat();
+    }
+
+
 
     Numero numero1(valor1);
     Numero numero2(valor2);
@@ -842,7 +897,7 @@ void menuALU::on_multiplicacion_clicked()
     }
 
     this->ui->textoIEEEOp1->setText(cadenaIEEE1);
-    this->ui->textoIEEEOp2->setText(cadenaIEEE2); 
+    this->ui->textoIEEEOp2->setText(cadenaIEEE2);
 
     vector<int> resultado= this->multiplicacion(numero1, numero2);
 
@@ -987,22 +1042,14 @@ void menuALU::on_division_clicked()
    }
 
    //Tabla para aproximar el inverso de un numero real
-   float bPrima=0;
+   float bPrima=4/5;
 
    if (valorEscalado2<1.25){
 
      bPrima=1;
-   }else{
-
-     bPrima=0.8;
    }
 
-   //Calculo del signo de la division
-   int signoDivision=0;
 
-   if (s1!=s2){
-       signoDivision=1;
-   }
 
 
    Numero numeroA(valorEscalado1);
@@ -1011,8 +1058,137 @@ void menuALU::on_division_clicked()
 
 
    vector<int> x=multiplicacion(numeroA, numeroBPrima);
+   vector<int> xAnterior= x;
    vector<int> y=multiplicacion(numeroB, numeroBPrima);
+   vector<int> yAnterior=y;
+   vector<int> r = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+
+   Numero constante(y);
+
+   Numero rNumero(r);
+
+   Numero xFloat(x);
+   Numero yFloat(y);
+   Numero xAnteriorFloat(xAnterior);
+   Numero yAnteriorFloat(yAnterior);
+
+   Numero dos(2);
+
+               //Numero prueba1(1.20000005);
+                //Numero prueba2(1.20000005);
+
+
+
+
+
+   Numero negativoXAnterior(-xAnteriorFloat.getFloat());
+   Numero comparacion(suma(xFloat, negativoXAnterior));
+                //Numero comparacion(suma(prueba1, prueba2));
+
+
+
+   Numero condicion(pow(10, -4));
+
+
+
+
+   //Comparacionfinalizacion es (x1-x0)-10 a la -4
+   //Numero comparacionFinalizacion(suma(comparacion, condicion));
+
+   int aux = 1;
+
+
+   while(aux == 1){
+
+
+
+       yAnteriorFloat.setSigno(1);
+       rNumero.setNuevoNumero(suma(dos, yAnteriorFloat));
+       yAnteriorFloat.setSigno(0);
+
+       yFloat.setNuevoNumero(multiplicacion(yAnteriorFloat, rNumero));
+       xFloat.setNuevoNumero(multiplicacion(xAnteriorFloat, rNumero));
+
+
+       //Rehacemos la condicion para comprobar si vuelve a entrar en el while
+
+       xAnteriorFloat.setSigno(1);
+       comparacion.setNuevoNumero(suma(xFloat, xAnteriorFloat));
+       xAnteriorFloat.setSigno(0);
+
+       //comparacionFinalizacion.setNuevoNumero(suma(comparacion, condicion));
+
+       yAnteriorFloat.setNuevoNumero(yFloat.getIEE());
+
+       if (comparacion.getFloat() < condicion.getFloat()){
+
+           aux = 0;
+       } else {
+
+           aux = 1;
+       }
+
+
+   }
+
+   //Calculo de exponente y mantisa de X
+
+   int exponenteX = xFloat.getExponente();
+   vector<int> mantisaX = xFloat.getMantisa();
+
+   //Calculo del signo de la division
+   int signoDivision=0;
+
+   if (s1!=s2){
+       signoDivision=1;
+   }
+
+   //Calculo del exponente de la division
+
+
+   Numero expA(exp1);
+   Numero expB(exp2);
+   Numero expX(exponenteX);
+
+   expB.setSigno(1);
+   Numero temporal(suma(expA, expB));
+   expB.setSigno(0);
+
+   Numero exponenteDivision(suma(temporal, expX));
+
+   vector<int> exponenteFinal = this->enteroTObinario(exponenteDivision.getFloat(), 8);
+
+   //Obtenemos el resultado final
+
+   vector<int> vectorFinal;
+
+   vectorFinal.push_back(signoDivision);
+
+   for(int i=0; i<8; i++){
+
+       vectorFinal.push_back(exponenteFinal[i]);
+   }
+
+   for(int i=1; i<24; i++){
+
+       vectorFinal.push_back(mantisaX[i]);
+   }
+
+   QString hola;
+
+   for(int i=0; i<32; i++){
+
+       hola.append(QString::number(vectorFinal[i]));
+   }
+
+   ui->resultadoIEEE->setText(hola);
+   ui->resultadoHexadecimal->setText(binarytoHexadecimal(vectorFinal));
+
+   Numero resultadoAux(vectorFinal);
+
+   QString stringReal = QString::number(resultadoAux.numero);
+
+   ui->resultadoReal->setText(stringReal);
 
 
 }
-
