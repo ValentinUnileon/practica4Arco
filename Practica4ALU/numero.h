@@ -49,6 +49,7 @@ public:
     int getpFraccionaria();
     int getSigno();
     void setSigno(int signo);
+    void setExponente(int expNuevo);
     float getFloat();
     vector<int> enteroToBinario(int numero, int numByte);
     vector<int> getMantisa();

@@ -21,6 +21,8 @@ menuALU::~menuALU()
 
 vector<int> menuALU::suma(Numero numero1, Numero numero2){
 
+
+
     //Paso 1
     int g= 0;
     int r= 0;
@@ -54,6 +56,18 @@ vector<int> menuALU::suma(Numero numero1, Numero numero2){
 
     vector<int> mantisa1=numero1.getMantisa();
     vector<int> mantisa2=numero2.getMantisa();
+
+    if(numero1.getExponente() < 1){
+
+        numero1.setExponente(1);
+        mantisa1[0]=0;
+    }
+
+    if(numero2.getExponente() < 1){
+
+        numero2.setExponente(1);
+        mantisa2[0]=0;
+    }
 
     //Paso 3
     expSuma=numero1.getExponente();
@@ -220,7 +234,7 @@ vector<int> menuALU::suma(Numero numero1, Numero numero2){
             st=1;
         }
 
-        r=P[23];             //AVISO AVISO AVISO AVISO AVISO
+        r=P[23];
 
         for(int i=P.size()-1; i>0; i--){
             P[i]=P[i-1];
@@ -269,7 +283,7 @@ vector<int> menuALU::suma(Numero numero1, Numero numero2){
             for(int j=0; j<(int)P.size()-1; j++){
                P[j]=P[j+1];
             }
-            P[23]=g;         //AVISO AVISO CUIDADO CUIDADO
+            P[23]=g;
 
         }
 
@@ -279,7 +293,7 @@ vector<int> menuALU::suma(Numero numero1, Numero numero2){
 //Paso 11
 
 
-    if( (r==1 && st==1) || (r==1 && st==0 && P[23]==1) ) {  // CUIDADO CUIDADO AVISO AVISO
+    if( (r==1 && st==1) || (r==1 && st==0 && P[23]==1) ) {
 
         vector<int> aux ={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1};
         int acarreoAUX=0;
@@ -336,9 +350,6 @@ vector<int> menuALU::suma(Numero numero1, Numero numero2){
        mantisaSumaNormalizada.push_back(mantisaSuma[i]);
     }
 
-    // mantisaSumaNormalizada.push_back(0);
-
-
     vector<int> resultado;
     resultado.push_back(signoSuma);
 
@@ -349,32 +360,6 @@ vector<int> menuALU::suma(Numero numero1, Numero numero2){
 
     return resultado;
 }
-
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
 
 
 void menuALU::on_suma_clicked()
@@ -420,6 +405,9 @@ void menuALU::on_suma_clicked()
             aux2 = cadena1.mid(0, posicion1);
 
             valor1 = aux2.toFloat()*pow(10, aux1.toFloat());
+        } else{
+
+            valor1=ui->textoRealOp1->text().toFloat();
         }
 
         if(posicion2 != -1){
@@ -428,6 +416,9 @@ void menuALU::on_suma_clicked()
             aux2 = cadena2.mid(0, posicion2);
 
             valor2 = aux2.toFloat()*pow(10, aux1.toFloat());
+        } else {
+
+            valor2=ui->textoRealOp2->text().toFloat();
         }
 
     }else{
@@ -499,6 +490,7 @@ void menuALU::on_suma_clicked()
 
     ui->resultadoReal->setText(stringReal);
 
+
 }
 
 vector<int> menuALU::enteroTObinario(int numero, int numByte) {          //metodo para pasar un numero entero a binario
@@ -543,7 +535,167 @@ vector<int> menuALU::enteroTObinario(int numero, int numByte) {          //metod
 
 
 
+void menuALU::on_multiplicacion_clicked()
+{
 
+    QString cadena1=ui->textoRealOp1->text();
+    QString cadena2=ui->textoRealOp2->text();
+
+    QString aux1;
+    QString aux2;
+
+    float valor1 = 0;
+    float valor2 = 0;
+
+    int encontrado = 0;
+    int posicion1 = -1;
+    int posicion2 = -1;
+
+    for (int i =0; i<cadena1.length(); i++){
+
+        if (cadena1.at(i) == 'E'){
+
+            encontrado = 1;
+            posicion1 = i;
+        }
+    }
+
+    for (int i =0; i<cadena2.length(); i++){
+
+        if (cadena2.at(i) == 'E'){
+
+            encontrado = 1;
+            posicion2 = i;
+        }
+    }
+
+    if (encontrado == 1){
+
+        if(posicion1 != -1){
+
+            aux1 = cadena1.mid(posicion1+1,(cadena1.length()-posicion1+1));
+            aux2 = cadena1.mid(0, posicion1);
+
+            valor1 = aux2.toFloat()*pow(10, aux1.toFloat());
+        } else{
+
+            valor1=ui->textoRealOp1->text().toFloat();
+        }
+
+        if(posicion2 != -1){
+
+            aux1 = cadena2.mid(posicion2+1,(cadena2.length()-posicion2+1));
+            aux2 = cadena2.mid(0, posicion2);
+
+            valor2 = aux2.toFloat()*pow(10, aux1.toFloat());
+        } else {
+
+            valor2=ui->textoRealOp2->text().toFloat();
+        }
+
+    }else{
+
+        valor1=ui->textoRealOp1->text().toFloat();
+        valor2=ui->textoRealOp2->text().toFloat();
+    }
+
+    Numero numero1(valor1);
+    Numero numero2(valor2);
+
+    vector<int> ieee1;
+    vector<int> ieee2;
+    vector<int> exponente1 = this->enteroTObinario(numero1.getExponente(), 8);
+    vector<int> exponente2 = this->enteroTObinario(numero2.getExponente(), 8);
+    vector<int> pFraccionaria1 = this->enteroTObinario(numero1.getpFraccionaria(), 23);
+    vector<int> pFraccionaria2 = this->enteroTObinario(numero2.getpFraccionaria(), 23);
+
+    ieee1.push_back(numero1.getSigno());
+    ieee2.push_back(numero2.getSigno());
+
+    for(int i=0; i<8; i++){
+
+        ieee1.push_back(exponente1[i]);
+        ieee2.push_back(exponente2[i]);
+    }
+
+    for(int i=0; i<23; i++){
+
+        ieee1.push_back(pFraccionaria1[i]);
+        ieee2.push_back(pFraccionaria2[i]);
+    }
+
+    QString cadenaHexadeci1 = binarytoHexadecimal(ieee1);
+    QString cadenaHexadeci2 = binarytoHexadecimal(ieee2);
+
+    this->ui->textoHexadecimalOp1->setText(cadenaHexadeci1);
+    this->ui->textoHexadecimalOp2->setText(cadenaHexadeci2);
+
+    QString cadenaIEEE1;
+    QString cadenaIEEE2;
+
+    for(int i=0; i<32; i++){
+
+        cadenaIEEE1.append(QString::number(ieee1[i]));
+        cadenaIEEE2.append(QString::number(ieee2[i]));
+    }
+
+    this->ui->textoIEEEOp1->setText(cadenaIEEE1);
+    this->ui->textoIEEEOp2->setText(cadenaIEEE2);
+
+    vector<int> resultado= this->multiplicacion(numero1, numero2);
+
+    QString hola;
+    int esInfinito=1;
+    int esCero=1;
+
+    for(int i=0; i<32; i++){
+
+        hola.append(QString::number(resultado[i]));
+
+        if (i!=0){
+
+            if (resultado[i]==0){
+
+                esInfinito=0;
+            }
+
+            if (resultado[i]==1){
+
+                esCero=0;
+            }
+        }
+    }
+
+    ui->resultadoIEEE->setText(hola);
+    ui->resultadoHexadecimal->setText(binarytoHexadecimal(resultado));
+
+    Numero resultadoAux(resultado);
+
+
+
+    if (esInfinito == 1){
+
+        ui->resultadoReal->setText("Inf");
+    } else if(valor1 == 0 || valor2 == 0){
+
+        hola = "00000000000000000000000000000000";
+        resultado = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+        ui->resultadoReal->setText("0");
+
+        ui->resultadoIEEE->setText(hola);
+        ui->resultadoHexadecimal->setText(binarytoHexadecimal(resultado));
+
+    }else if (esCero == 1){
+
+        ui->resultadoReal->setText("NaN");
+
+    }else {
+        QString stringReal = QString::number(resultadoAux.numero);
+        ui->resultadoReal->setText(stringReal);
+    }
+
+
+}
 
 
 
@@ -559,10 +711,15 @@ vector<int> menuALU::multiplicacion(Numero numero1, Numero numero2){
 
    //Paso1
 
-   int signoProducto=s1*s2;
+   int signoProducto=0;
+
+   if (s1+s2 ==1){
+
+       signoProducto = 1;
+   }
 
    //Paso2
-   int expProducto=exp1+exp2 -127;  //IMPORTANTE  IMPORTANTEIMPORTANTEIMPORTANTEIMPORTANTEIMPORTANTEIMPORTANTEIMPORTANTEIMPORTANTE
+   int expProducto=exp1+exp2 -127;
 
    //Paso3
 
@@ -721,10 +878,10 @@ vector<int> menuALU::multiplicacion(Numero numero1, Numero numero2){
        if(t >= 24){
 
            // HAY UNDERFLOW
-           //Todo a ceros TODO TODO
+           //Todo a ceros
 
-           expProducto = 1;
-           P = {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+           expProducto = 0;
+           P = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
 
        }else{
@@ -744,9 +901,6 @@ vector<int> menuALU::multiplicacion(Numero numero1, Numero numero2){
    }
 
    //Denormales
-
-   //1
-   //2
 
    if(expProducto>1){
        int t1 = expProducto-1;
@@ -777,32 +931,11 @@ vector<int> menuALU::multiplicacion(Numero numero1, Numero numero2){
 
    }
 
-   //3   :(
-
-   if( expProducto==1){
-
-       //PREGUNTAR POR CORREO IMPORTANTE IMPORTANTE IMPORTANTE IMPORTANTE IMPORTANTE IMPORTANTE
-       //poner NAN
-
-   }
-
-
-
-   //falta OPERANDOS CERO
-
-
-
-
-
-
-
    vector<int> mantisaProductoNormalizada;
    mantisaP=P;
    for(int i=1; i<24; i++){
       mantisaProductoNormalizada.push_back(mantisaP[i]);
    }
-
-   // mantisaProductoNormalizada.push_back(0);
 
    vector<int> resultado;
    resultado.push_back(signoProducto);
@@ -814,110 +947,9 @@ vector<int> menuALU::multiplicacion(Numero numero1, Numero numero2){
 
 
     return resultado;
-
-   //Desbordamientos comprobacion
-
-   //FALTA hacer desbordamiento infinito :(
-
-   //Desbordamiento a cero
 }
 
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
-///////////////////////////////////
 
-
-
-void menuALU::on_multiplicacion_clicked()
-{
-
-    float valor1=ui->textoRealOp1->text().toFloat();
-    float valor2=ui->textoRealOp2->text().toFloat();
-
-    Numero numero1(valor1);
-    Numero numero2(valor2);
-
-    vector<int> ieee1;
-    vector<int> ieee2;
-    vector<int> exponente1 = this->enteroTObinario(numero1.getExponente(), 8);
-    vector<int> exponente2 = this->enteroTObinario(numero2.getExponente(), 8);
-    vector<int> pFraccionaria1 = this->enteroTObinario(numero1.getpFraccionaria(), 23);
-    vector<int> pFraccionaria2 = this->enteroTObinario(numero2.getpFraccionaria(), 23);
-
-    ieee1.push_back(numero1.getSigno());
-    ieee2.push_back(numero2.getSigno());
-
-    for(int i=0; i<8; i++){
-
-        ieee1.push_back(exponente1[i]);
-        ieee2.push_back(exponente2[i]);
-    }
-
-    for(int i=0; i<23; i++){
-
-        ieee1.push_back(pFraccionaria1[i]);
-        ieee2.push_back(pFraccionaria2[i]);
-    }
-
-    QString cadenaHexadeci1 = binarytoHexadecimal(ieee1);
-    QString cadenaHexadeci2 = binarytoHexadecimal(ieee2);
-
-    this->ui->textoHexadecimalOp1->setText(cadenaHexadeci1);
-    this->ui->textoHexadecimalOp2->setText(cadenaHexadeci2);
-
-    QString cadenaIEEE1;
-    QString cadenaIEEE2;
-
-    for(int i=0; i<32; i++){
-
-        cadenaIEEE1.append(QString::number(ieee1[i]));
-        cadenaIEEE2.append(QString::number(ieee2[i]));
-    }
-
-    this->ui->textoIEEEOp1->setText(cadenaIEEE1);
-    this->ui->textoIEEEOp2->setText(cadenaIEEE2);
-
-    vector<int> resultado= this->multiplicacion(numero1, numero2);
-
-    QString hola;
-
-    for(int i=0; i<32; i++){
-
-        hola.append(QString::number(resultado[i]));
-    }
-
-    ui->resultadoIEEE->setText(hola);
-    ui->resultadoHexadecimal->setText(binarytoHexadecimal(resultado));
-
-    Numero resultadoAux(resultado);
-
-    QString stringReal = QString::number(resultadoAux.numero);
-
-    ui->resultadoReal->setText(stringReal);
-
-}
 
 
 QString menuALU::binarytoHexadecimal(vector<int> cadenaIEEE){
@@ -1008,8 +1040,67 @@ int menuALU::binaryToReal(vector<int> cuatros){
 
 void menuALU::on_division_clicked()
 {
-    float valor1=ui->textoRealOp1->text().toFloat();
-    float valor2=ui->textoRealOp2->text().toFloat();
+
+    QString cadena1=ui->textoRealOp1->text();
+    QString cadena2=ui->textoRealOp2->text();
+
+    QString aux1;
+    QString aux2;
+
+    float valor1 = 0;
+    float valor2 = 0;
+
+    int encontrado = 0;
+    int posicion1 = -1;
+    int posicion2 = -1;
+
+    for (int i =0; i<cadena1.length(); i++){
+
+        if (cadena1.at(i) == 'E'){
+
+            encontrado = 1;
+            posicion1 = i;
+        }
+    }
+
+    for (int i =0; i<cadena2.length(); i++){
+
+        if (cadena2.at(i) == 'E'){
+
+            encontrado = 1;
+            posicion2 = i;
+        }
+    }
+
+    if (encontrado == 1){
+
+        if(posicion1 != -1){
+
+            aux1 = cadena1.mid(posicion1+1,(cadena1.length()-posicion1+1));
+            aux2 = cadena1.mid(0, posicion1);
+
+            valor1 = aux2.toFloat()*pow(10, aux1.toFloat());
+        } else{
+
+            valor1=ui->textoRealOp1->text().toFloat();
+        }
+
+        if(posicion2 != -1){
+
+            aux1 = cadena2.mid(posicion2+1,(cadena2.length()-posicion2+1));
+            aux2 = cadena2.mid(0, posicion2);
+
+            valor2 = aux2.toFloat()*pow(10, aux1.toFloat());
+        } else {
+
+            valor2=ui->textoRealOp2->text().toFloat();
+        }
+
+    }else{
+
+        valor1=ui->textoRealOp1->text().toFloat();
+        valor2=ui->textoRealOp2->text().toFloat();
+    }
 
 
     Numero numero1(valor1);
@@ -1042,7 +1133,7 @@ void menuALU::on_division_clicked()
    }
 
    //Tabla para aproximar el inverso de un numero real
-   float bPrima=4/5;
+   float bPrima = 0.8;
 
    if (valorEscalado2<1.25){
 
@@ -1067,10 +1158,10 @@ void menuALU::on_division_clicked()
 
    Numero rNumero(r);
 
-   Numero xFloat(x);
-   Numero yFloat(y);
-   Numero xAnteriorFloat(xAnterior);
-   Numero yAnteriorFloat(yAnterior);
+   Numero xNuevo(x);
+   Numero yNuevo(y);
+   Numero xViejo(xAnterior);
+   Numero yViejo(yAnterior);
 
    Numero dos(2);
 
@@ -1081,8 +1172,8 @@ void menuALU::on_division_clicked()
 
 
 
-   Numero negativoXAnterior(-xAnteriorFloat.getFloat());
-   Numero comparacion(suma(xFloat, negativoXAnterior));
+   Numero negativoXAnterior(-xViejo.getFloat());
+   Numero comparacion(suma(xNuevo, negativoXAnterior));
                 //Numero comparacion(suma(prueba1, prueba2));
 
 
@@ -1102,23 +1193,26 @@ void menuALU::on_division_clicked()
 
 
 
-       yAnteriorFloat.setSigno(1);
-       rNumero.setNuevoNumero(suma(dos, yAnteriorFloat));
-       yAnteriorFloat.setSigno(0);
+       yViejo.setSigno(1);
+       rNumero.setNuevoNumero(suma(dos, yViejo));
+       yViejo.setSigno(0);
 
-       yFloat.setNuevoNumero(multiplicacion(yAnteriorFloat, rNumero));
-       xFloat.setNuevoNumero(multiplicacion(xAnteriorFloat, rNumero));
+       yNuevo.setNuevoNumero(multiplicacion(yViejo, rNumero));
+       xNuevo.setNuevoNumero(multiplicacion(xViejo, rNumero));
 
 
        //Rehacemos la condicion para comprobar si vuelve a entrar en el while
 
-       xAnteriorFloat.setSigno(1);
-       comparacion.setNuevoNumero(suma(xFloat, xAnteriorFloat));
-       xAnteriorFloat.setSigno(0);
+       xNuevo.setSigno(1);
+       comparacion.setNuevoNumero(suma(xViejo, xNuevo));
+       xNuevo.setSigno(0);
 
        //comparacionFinalizacion.setNuevoNumero(suma(comparacion, condicion));
 
-       yAnteriorFloat.setNuevoNumero(yFloat.getIEE());
+       xViejo.setNuevoNumero(xNuevo.getIEE());
+       yViejo.setNuevoNumero(yNuevo.getIEE());
+
+       comparacion.setSigno(0);
 
        if (comparacion.getFloat() < condicion.getFloat()){
 
@@ -1129,12 +1223,13 @@ void menuALU::on_division_clicked()
        }
 
 
+
    }
 
    //Calculo de exponente y mantisa de X
 
-   int exponenteX = xFloat.getExponente();
-   vector<int> mantisaX = xFloat.getMantisa();
+   int exponenteX = xNuevo.getExponente();
+   vector<int> mantisaX = xNuevo.getMantisa();
 
    //Calculo del signo de la division
    int signoDivision=0;
@@ -1174,21 +1269,38 @@ void menuALU::on_division_clicked()
        vectorFinal.push_back(mantisaX[i]);
    }
 
-   QString hola;
+   if (numero2.getFloat() == 0){
 
-   for(int i=0; i<32; i++){
+       ui->resultadoReal->setText("NaN");
 
-       hola.append(QString::number(vectorFinal[i]));
+       QString excepcion ="";
+       excepcion.append(QString::number(numero1.getSigno()));
+
+       for(int i=0; i<31; i++){
+
+           excepcion.append("1");
+       }
+
+       ui->resultadoIEEE->setText(excepcion);
+       ui->resultadoHexadecimal->setText("7FFFFFFF");
+   } else{
+
+       QString hola;
+
+       for(int i=0; i<32; i++){
+
+           hola.append(QString::number(vectorFinal[i]));
+       }
+
+       ui->resultadoIEEE->setText(hola);
+       ui->resultadoHexadecimal->setText(binarytoHexadecimal(vectorFinal));
+
+       Numero resultadoAux(vectorFinal);
+
+       QString stringReal = QString::number(resultadoAux.numero);
+
+       ui->resultadoReal->setText(stringReal);
    }
-
-   ui->resultadoIEEE->setText(hola);
-   ui->resultadoHexadecimal->setText(binarytoHexadecimal(vectorFinal));
-
-   Numero resultadoAux(vectorFinal);
-
-   QString stringReal = QString::number(resultadoAux.numero);
-
-   ui->resultadoReal->setText(stringReal);
 
 
 }

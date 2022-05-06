@@ -69,6 +69,20 @@ void Numero::setNuevoNumero(vector<int> vectorIEEE){
 
 }
 
+void Numero::setExponente(int expNuevo){
+
+    union Code a;
+
+    a.bitfield.sign = this->signo;
+    a.bitfield.expo = expNuevo;
+    a.bitfield.partFrac = this->pFraccionaria;
+
+    this->numero = a.numero;
+    this->signo=a.bitfield.sign;
+    this->exponente=a.bitfield.expo;
+    this->pFraccionaria=a.bitfield.partFrac;
+}
+
 void Numero::floattoIEE (){
 
     union Code a;
